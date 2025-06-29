@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Romantis - Syahran</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: url('2fb249ee4c9c036305a6239fa2b224a0.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .chat-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background-color: rgba(255,255,255,0.95);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background-color: #075e54;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+    }
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .chat-box {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .msg {
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 75%;
+      line-height: 1.4;
+    }
+    .from-ai {
+      background-color: #dcf8c6;
+      align-self: flex-start;
+    }
+    .from-user {
+      background-color: #e6e6e6;
+      align-self: flex-end;
+    }
+    .typing {
+      font-style: italic;
+      font-size: 12px;
+      color: gray;
+      margin-left: 10px;
+    }
+    .input-box {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    input {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      font-size: 14px;
+    }
+    button {
+      padding: 0 20px;
+      border: none;
+      background-color: #25d366;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .final-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+    .yes-btn, .no-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    .yes-btn {
+      background-color: #25d366;
+      color: white;
+    }
+    .no-btn {
+      background-color: #ff5c5c;
+      color: white;
+      transition: transform 0.3s;
+    }
+    .no-btn:hover {
+      transform: translateX(40px);
+    }
+  </style>
+</head>
+<body onclick="startMusic()">
+  <div class="chat-container">
+    <div class="header">
+      <img src="0104859a4ea654e6dbcd9ff925c8a35d.jpg" alt="Syahran">
+      <div>
+        <strong>Syahran</strong><br>
+        <span class="typing" id="typingStatus"></span>
+      </div>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-box">
+      <input type="text" id="userInput" placeholder="Ketik di sini..." onkeydown="if(event.key==='Enter') sendMessage()">
+      <button onclick="sendMessage()">Kirim</button>
+    </div>
+  </div>
+
+  <audio id="romanticMusic" src="ssstik.io_1751190473970_20250629_164819.mp3"></audio>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const typingStatus = document.getElementById('typingStatus');
+    const userInput = document.getElementById('userInput');
+    const music = document.getElementById('romanticMusic');
+
+    let step = 0;
+    const aiReplies = [
+      "Hai Rara, kamu lagi apa? 😄",
+      "Aku cuma pengen ngobrol... kangen 🥺",
+      "Kamu percaya cinta dari hati? ❤️",
+      "Karena aku ngerasa nyaman banget sama kamu 😘",
+      "Aku punya pertanyaan serius nih... 💍",
+      "Will you marry me and be mine forever? 💖"
+    ];
+
+    function startMusic() {
+      music.play().catch(() => {});
+      window.onclick = null;
+    }
+
+    function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+      appendMessage(text, 'from-user');
+      userInput.value = '';
+      showTyping();
+      setTimeout(() => {
+        hideTyping();
+        if (step < aiReplies.length) {
+          appendMessage(aiReplies[step], 'from-ai');
+          step++;
+          if (step === aiReplies.length) showFinalButtons();
+        }
+      }, 1000);
+    }
+
+    function appendMessage(text, cls) {
+      const msg = document.createElement('div');
+      msg.className = `msg ${cls}`;
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTyping() {
+      typingStatus.textContent = "Sedang mengetik...";
+    }
+
+    function hideTyping() {
+      typingStatus.textContent = "";
+    }
+
+    function showFinalButtons() {
+      const wrap = document.createElement('div');
+      wrap.className = 'final-buttons';
+
+      const yes = document.createElement('button');
+      yes.className = 'yes-btn';
+      yes.textContent = 'Yes 💕';
+      yes.onclick = () => {
+        appendMessage("Aku bersedia, Syahran 💘", 'from-user');
+        setTimeout(() => {
+          window.location.href = 'https://wa.me/6281226364160?text=Ya%2C+aku+bersedia+menikah+denganmu+%F0%9F%92%95';
+        }, 1000);
+      };
+
+      const no = document.createElement('button');
+      no.className = 'no-btn';
+      no.textContent = 'No 😢';
+
+      wrap.appendChild(yes);
+      wrap.appendChild(no);
+      chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
